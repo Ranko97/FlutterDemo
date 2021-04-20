@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:html';
 
+import 'package:demo_app/company.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,9 +27,10 @@ class CompaniesData extends StatefulWidget {
 
 class CompaniesList extends State<CompaniesData> {
   var text = "";
+  var companies;
 
   void getData() async {
-    print('print me');
+    print('print meee');
 
     text = "Neki novi text";
 
@@ -46,7 +49,10 @@ class CompaniesList extends State<CompaniesData> {
     if (response.statusCode == 200) {
       text = await response.stream.bytesToString();
       print("200");
-      print(text);
+      // print(text);
+
+      DataOuter dataOuter = DataOuter.fromJson(json.decode(text));
+      print(dataOuter.companies?.data?.companies[0].name);
     } else {
       print(response.reasonPhrase);
     }
