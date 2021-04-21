@@ -30,8 +30,6 @@ class CompaniesList extends State<CompaniesData> {
   var companies;
 
   void getData() async {
-    print('print meee');
-
     text = "Neki novi text";
 
     var headers = {

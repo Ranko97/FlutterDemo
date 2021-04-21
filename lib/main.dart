@@ -1,7 +1,17 @@
+import 'dart:convert';
+
 import 'package:demo_app/home.dart';
+import 'package:demo_app/login_end_user.dart';
+import 'package:demo_app/user.dart';
 import 'package:flutter/material.dart';
 
+import 'package:http/http.dart' as http;
+
 void main() => runApp(SignUpApp());
+
+final loginUrl = "https://edomace.azurewebsites.net/graphql";
+final loginMutationString =
+    """mutation login(\$username: String!, \$password: String!) {\\r\\n  loginEndUser(username: \$username, password: \$password) {\\r\\n    id authToken\\r\\n  }\\r\\n}""";
 
 class SignUpApp extends StatelessWidget {
   @override
@@ -9,7 +19,7 @@ class SignUpApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (context) => SignUpScreen(),
-        '/welcome': (context) => HomeScreen(),
+        '/home': (context) => HomeScreen(),
       },
     );
   }
@@ -38,23 +48,61 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  final _firstNameTextController = TextEditingController();
-  final _lastNameTextController = TextEditingController();
   final _usernameTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
 
   double _formProgress = 0;
 
-  void _showHomeScreen() {
-    Navigator.of(context).pushNamed('/welcome');
+  Future<void> _login() async {
+    // print(_usernameTextController.value.text);
+    // print(_passwordTextController.value.text);
+
+    // Send login request
+    var result = "";
+    var headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    };
+
+    var params = new User();
+    params.username = _usernameTextController.value.text;
+    params.password = _passwordTextController.value.text;
+
+    var request = http.Request('POST', Uri.parse(loginUrl));
+    request.body = '''{"query":"''' +
+        loginMutationString +
+        '''","variables":''' +
+        jsonEncode(params.toJson()) +
+        '''}''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      result = await response.stream.bytesToString();
+
+      // Check if loginEndUser is null
+      LoginResult loginResult = LoginResult.fromJson(json.decode(result));
+
+      if (loginResult.data?.loginEndUser != null) {
+        // Get user's auth token and send it with next requests
+
+        // Navigate to main page
+        Navigator.of(context).pushNamed('/home');
+      } else {
+        // TODO: Display error message
+      }
+    } else {
+      print(response.reasonPhrase);
+      // TODO: Display error message
+    }
   }
 
   void _updateFormProgress() {
     var progress = 0.0;
-    final controllers = [
-      _firstNameTextController,
-      _lastNameTextController,
-      _usernameTextController
-    ];
+    final controllers = [_usernameTextController, _passwordTextController];
 
     for (final controller in controllers) {
       if (controller.value.text.isNotEmpty) {
@@ -79,22 +127,16 @@ class _SignUpFormState extends State<SignUpForm> {
           Padding(
             padding: EdgeInsets.all(8.0),
             child: TextFormField(
-              controller: _firstNameTextController,
-              decoration: InputDecoration(hintText: 'First name'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: _lastNameTextController,
-              decoration: InputDecoration(hintText: 'Last name'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextFormField(
               controller: _usernameTextController,
               decoration: InputDecoration(hintText: 'Username'),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: _passwordTextController,
+              decoration: InputDecoration(hintText: 'Password'),
+              obscureText: true,
             ),
           ),
           TextButton(
@@ -112,8 +154,8 @@ class _SignUpFormState extends State<SignUpForm> {
                     : Colors.blue;
               }),
             ),
-            onPressed: _formProgress == 1 ? _showHomeScreen : null,
-            child: Text('Sign up'),
+            onPressed: _formProgress == 1 ? _login : null,
+            child: Text('Sign in'),
           ),
         ],
       ),
