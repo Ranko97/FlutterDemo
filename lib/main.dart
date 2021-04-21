@@ -50,13 +50,17 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  bool _errorVisible = false;
 
   double _formProgress = 0;
 
-  Future<void> _login() async {
-    // print(_usernameTextController.value.text);
-    // print(_passwordTextController.value.text);
+  void _updateErrorVisibility(bool visible) {
+    setState(() {
+      _errorVisible = visible;
+    });
+  }
 
+  Future<void> _login() async {
     // Send login request
     var result = "";
     var headers = {
@@ -87,16 +91,19 @@ class _SignUpFormState extends State<SignUpForm> {
       LoginResult loginResult = LoginResult.fromJson(json.decode(result));
 
       if (loginResult.data?.loginEndUser != null) {
+        _updateErrorVisibility(false);
         // Get user's auth token and send it with next requests
 
         // Navigate to main page
         Navigator.of(context).pushNamed('/home');
       } else {
-        // TODO: Display error message
+        // Display error message
+        _updateErrorVisibility(true);
       }
     } else {
       print(response.reasonPhrase);
-      // TODO: Display error message
+      // Display error message
+      _updateErrorVisibility(true);
     }
   }
 
@@ -157,6 +164,14 @@ class _SignUpFormState extends State<SignUpForm> {
             onPressed: _formProgress == 1 ? _login : null,
             child: Text('Sign in'),
           ),
+          new Visibility(
+              visible: _errorVisible,
+              child: new Padding(
+                padding: const EdgeInsets.all(
+                  8.0,
+                ),
+                child: new Text('Wrong password!'),
+              ))
         ],
       ),
     );

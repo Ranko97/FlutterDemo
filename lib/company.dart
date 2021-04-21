@@ -43,3 +43,13 @@ class DataOuter {
     return DataOuter(companies: CompaniesOuter.fromJson(json['data']));
   }
 }
+
+class SearchName {
+  String value;
+
+  SearchName({this.value = ""});
+
+  Map<String, dynamic> toJson() => {
+        'value': value,
+      };
+}
