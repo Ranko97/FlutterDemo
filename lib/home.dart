@@ -11,24 +11,35 @@ final companiesQuery =
     """query search(\$value: String) {\\r\\n  companies(query:\$value) {\\r\\n    data {\\r\\n      id name\\r\\n    }\\r\\n  }\\r\\n}""";
 
 class HomeScreen extends StatelessWidget {
+  final String authToken;
+  HomeScreen({Key? key, this.authToken = ""});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CompaniesData(),
+        child: CompaniesData(
+          authToken: authToken,
+        ),
       ),
     );
   }
 }
 
 class CompaniesData extends StatefulWidget {
+  final String authToken;
+  CompaniesData({Key? key, this.authToken = ""});
+
   @override
   State<StatefulWidget> createState() {
-    return CompaniesList();
+    return CompaniesList(authToken: authToken);
   }
 }
 
 class CompaniesList extends State<CompaniesData> {
+  final String authToken;
+  CompaniesList({Key? key, this.authToken = ""});
+
   List<Company> companies = [];
   final _searchTextController = TextEditingController();
 
@@ -41,11 +52,11 @@ class CompaniesList extends State<CompaniesData> {
   void getCompanies() async {
     String text = "";
 
-    // TODO: Bearer token
-
     var headers = {
       'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + authToken,
     };
+
     var searchParam = new SearchName();
     searchParam.value = _searchTextController.value.text;
 
@@ -73,18 +84,18 @@ class CompaniesList extends State<CompaniesData> {
   }
 
   Widget getCompanyWidgets(List<Company> companiesData) {
-    return Container( 
-      height: 500,
-      width: 500,
-      child: ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: companiesData.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            height: 50,
-            child: Center(child: Text(companiesData[index].name)),
-          );
-        }));
+    return Container(
+        height: 500,
+        width: 500,
+        child: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: companiesData.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                height: 50,
+                child: Center(child: Text(companiesData[index].name)),
+              );
+            }));
   }
 
   @override

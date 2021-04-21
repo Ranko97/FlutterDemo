@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 void main() => runApp(SignUpApp());
 
+String authToken = "";
 final loginUrl = "https://edomace.azurewebsites.net/graphql";
 final loginMutationString =
     """mutation login(\$username: String!, \$password: String!) {\\r\\n  loginEndUser(username: \$username, password: \$password) {\\r\\n    id authToken\\r\\n  }\\r\\n}""";
@@ -19,7 +20,9 @@ class SignUpApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (context) => SignUpScreen(),
-        '/home': (context) => HomeScreen(),
+        '/home': (context) => HomeScreen(
+              authToken: authToken,
+            ),
       },
     );
   }
@@ -65,8 +68,6 @@ class _SignUpFormState extends State<SignUpForm> {
     var result = "";
     var headers = {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS'
     };
 
     var params = new User();
@@ -93,6 +94,7 @@ class _SignUpFormState extends State<SignUpForm> {
       if (loginResult.data?.loginEndUser != null) {
         _updateErrorVisibility(false);
         // Get user's auth token and send it with next requests
+        authToken = loginResult.data!.loginEndUser!.authToken!;
 
         // Navigate to main page
         Navigator.of(context).pushNamed('/home');
