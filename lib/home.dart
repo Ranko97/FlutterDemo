@@ -57,14 +57,11 @@ class CompaniesList extends State<CompaniesData> {
       'Authorization': 'Bearer ' + authToken,
     };
 
-    var searchParam = new SearchName();
-    searchParam.value = _searchTextController.value.text;
-
     var request = http.Request('POST', Uri.parse(companiesUrl));
     request.body = '''{"query":"''' +
         companiesQuery +
         '''","variables":''' +
-        json.encode(searchParam.toJson()) +
+        json.encode({"value": _searchTextController.value.text}) +
         '''}''';
 
     request.headers.addAll(headers);
