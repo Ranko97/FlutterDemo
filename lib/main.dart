@@ -1,5 +1,29 @@
 import 'dart:convert';
 
+import 'package:demo_app/XDButton.dart';
+import 'package:demo_app/XDColors.dart';
+import 'package:demo_app/XDFeed.dart';
+import 'package:demo_app/XDFeed_disabled.dart';
+import 'package:demo_app/XDFilter.dart';
+import 'package:demo_app/XDGalerija.dart';
+import 'package:demo_app/XDHome.dart';
+import 'package:demo_app/XDInbox.dart';
+import 'package:demo_app/XDLogin.dart';
+import 'package:demo_app/XDMessageopen.dart';
+import 'package:demo_app/XDNovaobjava.dart';
+import 'package:demo_app/XDNovareferenca.dart';
+import 'package:demo_app/XDNovareferenca1.dart';
+import 'package:demo_app/XDObjava.dart';
+import 'package:demo_app/XDOnboarding.dart';
+import 'package:demo_app/XDOnboarding1.dart';
+import 'package:demo_app/XDPodesavanja.dart';
+import 'package:demo_app/XDProfilDostignuca.dart';
+import 'package:demo_app/XDProfilGalerije.dart';
+import 'package:demo_app/XDProfilObjave.dart';
+import 'package:demo_app/XDProfilPocetna.dart';
+import 'package:demo_app/XDProfilRecenzije.dart';
+import 'package:demo_app/XDSearch.dart';
+import 'package:demo_app/XDSearchProfilkompanije.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
 import 'package:demo_app/user.dart';
@@ -31,17 +55,7 @@ class SignUpApp extends StatelessWidget {
 class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Center(
-        child: SizedBox(
-          width: 400,
-          child: Card(
-            child: SignUpForm(),
-          ),
-        ),
-      ),
-    );
+    return XDMessageopen();
   }
 }
 
