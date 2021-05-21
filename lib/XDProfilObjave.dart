@@ -42,7 +42,7 @@ class XDProfilObjave extends StatelessWidget {
                 Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage(''),
+                  image: const AssetImage('assets/images/profileCover.png'),
                   fit: BoxFit.cover,
                 ),
               ),

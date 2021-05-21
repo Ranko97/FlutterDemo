@@ -247,7 +247,7 @@ class XDSearch extends StatelessWidget {
                   topRight: Radius.circular(11.0),
                 ),
                 image: DecorationImage(
-                  image: const AssetImage(''),
+                  image: const AssetImage('assets/images/profileCover.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -479,7 +479,7 @@ class XDSearch extends StatelessWidget {
                   topRight: Radius.circular(11.0),
                 ),
                 image: DecorationImage(
-                  image: const AssetImage(''),
+                  image: const AssetImage('assets/images/profileCover.png'),
                   fit: BoxFit.cover,
                 ),
               ),

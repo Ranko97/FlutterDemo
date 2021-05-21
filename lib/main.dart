@@ -17,6 +17,7 @@ import 'package:demo_app/XDObjava.dart';
 import 'package:demo_app/XDOnboarding.dart';
 import 'package:demo_app/XDOnboarding1.dart';
 import 'package:demo_app/XDPodesavanja.dart';
+import 'package:demo_app/XDProfil.dart';
 import 'package:demo_app/XDProfilDostignuca.dart';
 import 'package:demo_app/XDProfilGalerije.dart';
 import 'package:demo_app/XDProfilObjave.dart';
@@ -24,6 +25,7 @@ import 'package:demo_app/XDProfilPocetna.dart';
 import 'package:demo_app/XDProfilRecenzije.dart';
 import 'package:demo_app/XDSearch.dart';
 import 'package:demo_app/XDSearchProfilkompanije.dart';
+import 'package:demo_app/XDwebsite.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
 import 'package:demo_app/user.dart';
@@ -55,7 +57,7 @@ class SignUpApp extends StatelessWidget {
 class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return XDMessageopen();
+    return XDProfilRecenzije();
   }
 }
 
