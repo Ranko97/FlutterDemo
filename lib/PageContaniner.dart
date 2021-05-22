@@ -18,6 +18,7 @@ import 'package:demo_app/XDProfilPocetna.dart';
 import 'package:demo_app/XDProfilRecenzije.dart';
 import 'package:demo_app/XDSearch.dart';
 import 'package:demo_app/XDSearchProfilkompanije.dart';
+import 'package:demo_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +30,7 @@ class PageContainer extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       controller: controller,
       children: <Widget>[
+        LegacyLoginScreen(),
         XDOnboarding1(),
         XDOnboarding(),
         XDHome(),
@@ -48,6 +50,23 @@ class PageContainer extends StatelessWidget {
         XDNovareferenca(),
         XDNovareferenca1()
       ],
+    );
+  }
+}
+
+class LegacyLoginScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      body: Center(
+        child: SizedBox(
+          width: 400,
+          child: Card(
+            child: SignUpForm(),
+          ),
+        ),
+      ),
     );
   }
 }

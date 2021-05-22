@@ -4,7 +4,7 @@ import './XDFeed_disabled.dart';
 import './XDPretraga.dart';
 import './XDProfil.dart';
 import './XDPoruke.dart';
-import './XDPodesavanja.dart';
+import './XDPodesavanjaBottomTabBtn.dart';
 import './XDPlus.dart';
 import './XDUooerBar.dart';
 import './XDfacebook.dart';
@@ -1245,7 +1245,7 @@ class XDProfilRecenzije extends StatelessWidget {
             Pin(size: 27.0, end: 15.0),
             child:
                 // Adobe XD layer: 'Podesavanja' (component)
-                XDPodesavanja(),
+                XDPodesavanjaBottomTabBtn(),
           ),
           Pinned.fromPins(
             Pin(size: 58.0, end: 24.0),

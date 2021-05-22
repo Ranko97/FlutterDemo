@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import './XDFilterButton.dart';
 import './XDUooerBar.dart';
 import './XDFeed_disabled.dart';
+import './XDSearchField.dart';
 import './XDPretraga.dart';
 import './XDProfil.dart';
 import './XDPoruke.dart';
-import './XDPodesavanja.dart';
+import './XDPodesavanjaBottomTabBtn.dart';
 import './XDfacebook.dart';
 import './XDinstagram.dart';
 import './XDwebsite.dart';
@@ -202,6 +204,13 @@ class XDSearch extends StatelessWidget {
                 Container(
               color: const Color(0xfff9f9fc),
             ),
+          ),
+          Pinned.fromPins(
+            Pin(size: 37.0, end: 24.0),
+            Pin(size: 36.0, start: 116.0),
+            child:
+                // Adobe XD layer: 'Filter' (component)
+                XDFilterButton(),
           ),
           Pinned.fromPins(
             Pin(size: 98.0, start: 28.7),
@@ -889,6 +898,13 @@ class XDSearch extends StatelessWidget {
                 XDFeed_disabled(),
           ),
           Pinned.fromPins(
+            Pin(size: 279.8, start: 24.0),
+            Pin(size: 36.0, start: 115.2),
+            child:
+                // Adobe XD layer: 'Search' (component)
+                XDSearchField(),
+          ),
+          Pinned.fromPins(
             Pin(size: 23.0, start: 30.0),
             Pin(size: 23.0, end: 17.0),
             child:
@@ -914,7 +930,7 @@ class XDSearch extends StatelessWidget {
             Pin(size: 27.0, end: 15.0),
             child:
                 // Adobe XD layer: 'Podesavanja' (component)
-                XDPodesavanja(),
+                XDPodesavanjaBottomTabBtn(),
           ),
           Pinned.fromPins(
             Pin(size: 20.0, middle: 0.3211),

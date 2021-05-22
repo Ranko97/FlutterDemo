@@ -4,7 +4,7 @@ import './XDFeed_disabled.dart';
 import './XDPretraga.dart';
 import './XDProfil.dart';
 import './XDPoruke.dart';
-import './XDPodesavanja.dart';
+import './XDPodesavanjaBottomTabBtn.dart';
 import './XDUooerBar.dart';
 import './XDButton.dart';
 import './XDOnboarding.dart';
@@ -119,7 +119,7 @@ class XDFilter extends StatelessWidget {
             Pin(size: 27.0, end: 15.0),
             child:
                 // Adobe XD layer: 'Podesavanja' (component)
-                XDPodesavanja(),
+                XDPodesavanjaBottomTabBtn(),
           ),
           Pinned.fromPins(
             Pin(start: 21.0, end: 29.3),

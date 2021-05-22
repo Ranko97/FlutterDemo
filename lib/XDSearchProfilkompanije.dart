@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import './XDButtonKontakt.dart';
 import './XDButton.dart';
 import './XDOnboarding.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -7,7 +8,7 @@ import './XDFeed_disabled.dart';
 import './XDPretraga.dart';
 import './XDProfil.dart';
 import './XDPoruke.dart';
-import './XDPodesavanja.dart';
+import './XDPodesavanjaBottomTabBtn.dart';
 import './XDUooerBar.dart';
 import './XDfacebook.dart';
 import './XDinstagram.dart';
@@ -439,6 +440,13 @@ class XDSearchProfilkompanije extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
+            Pin(size: 117.0, middle: 0.2403),
+            Pin(size: 36.0, middle: 0.2595),
+            child:
+                // Adobe XD layer: 'Button' (component)
+                XDButtonKontakt(),
+          ),
+          Pinned.fromPins(
             Pin(size: 1.0, middle: 0.389),
             Pin(size: 62.0, middle: 0.336),
             child: SvgPicture.string(
@@ -612,7 +620,7 @@ class XDSearchProfilkompanije extends StatelessWidget {
             Pin(size: 27.0, end: 15.0),
             child:
                 // Adobe XD layer: 'Podesavanja' (component)
-                XDPodesavanja(),
+                XDPodesavanjaBottomTabBtn(),
           ),
           Pinned.fromPins(
             Pin(start: 21.0, end: 29.3),

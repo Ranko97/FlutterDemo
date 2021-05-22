@@ -8,7 +8,7 @@ import 'package:adobe_xd/page_link.dart';
 import './XDFeed_disabled.dart';
 import './XDProfil.dart';
 import './XDPoruke.dart';
-import './XDPodesavanja.dart';
+import './XDPodesavanjaBottomTabBtn.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class XDNovareferenca extends StatelessWidget {
@@ -584,7 +584,7 @@ class XDNovareferenca extends StatelessWidget {
             Pin(size: 27.0, end: 15.0),
             child:
                 // Adobe XD layer: 'Podesavanja' (component)
-                XDPodesavanja(),
+                XDPodesavanjaBottomTabBtn(),
           ),
         ],
       ),

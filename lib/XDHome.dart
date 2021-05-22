@@ -165,7 +165,7 @@ class XDHome extends StatelessWidget {
                 Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage(''),
+                  image: const AssetImage('assets/images/ymek.png'),
                   fit: BoxFit.fill,
                 ),
               ),

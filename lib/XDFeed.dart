@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
+import './XDFeedButton.dart';
 import './XDPretraga.dart';
 import './XDProfil.dart';
 import './XDPoruke.dart';
-import './XDPodesavanja.dart';
 import './XDUooerBar.dart';
+import './XDPodesavanjaBottomTabBtn.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class XDFeed extends StatelessWidget {
@@ -369,6 +370,13 @@ class XDFeed extends StatelessWidget {
             ),
           ),
           Pinned.fromPins(
+            Pin(size: 63.7, middle: 0.5015),
+            Pin(size: 63.7, end: 30.3),
+            child:
+                // Adobe XD layer: 'Feed' (component)
+                XDFeedButton(),
+          ),
+          Pinned.fromPins(
             Pin(size: 23.0, start: 30.0),
             Pin(size: 23.0, end: 17.0),
             child:
@@ -388,13 +396,6 @@ class XDFeed extends StatelessWidget {
             child:
                 // Adobe XD layer: 'Poruke' (component)
                 XDPoruke(),
-          ),
-          Pinned.fromPins(
-            Pin(size: 22.0, middle: 0.745),
-            Pin(size: 27.0, end: 15.0),
-            child:
-                // Adobe XD layer: 'Podesavanja' (component)
-                XDPodesavanja(),
           ),
           Pinned.fromPins(
             Pin(size: 222.0, start: 30.0),
@@ -660,6 +661,13 @@ class XDFeed extends StatelessWidget {
             child:
                 // Adobe XD layer: 'Uooer Bar' (component)
                 XDUooerBar(),
+          ),
+          Pinned.fromPins(
+            Pin(size: 22.0, middle: 0.745),
+            Pin(size: 27.0, end: 15.0),
+            child:
+                // Adobe XD layer: 'Podesavanja' (component)
+                XDPodesavanjaBottomTabBtn(),
           ),
         ],
       ),
