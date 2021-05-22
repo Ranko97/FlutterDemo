@@ -4,6 +4,8 @@ import './XDPretraga.dart';
 import './XDPoruke.dart';
 import './XDUooerBar.dart';
 import './XDButton.dart';
+import './XDOnboarding.dart';
+import 'package:adobe_xd/page_link.dart';
 import './XDFeed_disabled.dart';
 import './XDProfil.dart';
 import './XDPodesavanja.dart';
@@ -179,7 +181,17 @@ class XDNovaobjava extends StatelessWidget {
             Pin(size: 36.0, middle: 0.7152),
             child:
                 // Adobe XD layer: 'Button' (component)
-                XDButton(),
+                PageLink(
+              links: [
+                PageLinkInfo(
+                  transition: LinkTransition.Fade,
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => XDOnboarding(),
+                ),
+              ],
+              child: XDButton(),
+            ),
           ),
           Pinned.fromPins(
             Pin(size: 52.0, start: 37.0),

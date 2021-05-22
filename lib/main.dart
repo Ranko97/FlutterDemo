@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:demo_app/PageContaniner.dart';
 import 'package:demo_app/XDButton.dart';
 import 'package:demo_app/XDColors.dart';
 import 'package:demo_app/XDFeed.dart';
@@ -57,7 +58,7 @@ class SignUpApp extends StatelessWidget {
 class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return XDProfilRecenzije();
+    return PageContainer();
   }
 }
 

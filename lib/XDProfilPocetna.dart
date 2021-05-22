@@ -13,8 +13,10 @@ import './XDwebsite.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class XDProfilPocetna extends StatelessWidget {
+  final ImageProvider profileCover;
   XDProfilPocetna({
     Key? key,
+    this.profileCover = const AssetImage('assets/images/profileCover.png'),
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class XDProfilPocetna extends StatelessWidget {
                 Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage('assets/images/profileCover.png'),
+                  image: profileCover,
                   fit: BoxFit.cover,
                 ),
               ),

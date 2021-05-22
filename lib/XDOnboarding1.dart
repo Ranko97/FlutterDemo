@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './XDButton.dart';
+import './XDOnboarding.dart';
+import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class XDOnboarding1 extends StatelessWidget {
@@ -45,13 +47,6 @@ class XDOnboarding1 extends StatelessWidget {
                   TextHeightBehavior(applyHeightToFirstAscent: false),
               textAlign: TextAlign.left,
             ),
-          ),
-          Pinned.fromPins(
-            Pin(size: 117.0, middle: 0.4767),
-            Pin(size: 36.0, end: 75.6),
-            child:
-                // Adobe XD layer: 'Button' (component)
-                XDButton(),
           ),
           Pinned.fromPins(
             Pin(size: 25.0, middle: 0.4829),
@@ -310,6 +305,23 @@ class XDOnboarding1 extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          Pinned.fromPins(
+            Pin(size: 117.0, middle: 0.4767),
+            Pin(size: 36.0, end: 75.6),
+            child:
+                // Adobe XD layer: 'Button' (component)
+                PageLink(
+              links: [
+                PageLinkInfo(
+                  transition: LinkTransition.Fade,
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => XDOnboarding(),
+                ),
+              ],
+              child: XDButton(),
             ),
           ),
         ],

@@ -7,6 +7,8 @@ import './XDPoruke.dart';
 import './XDPodesavanja.dart';
 import './XDUooerBar.dart';
 import './XDButton.dart';
+import './XDOnboarding.dart';
+import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class XDFilter extends StatelessWidget {
@@ -208,7 +210,17 @@ class XDFilter extends StatelessWidget {
             Pin(size: 36.0, end: 118.0),
             child:
                 // Adobe XD layer: 'Button' (component)
-                XDButton(),
+                PageLink(
+              links: [
+                PageLinkInfo(
+                  transition: LinkTransition.Fade,
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => XDOnboarding(),
+                ),
+              ],
+              child: XDButton(),
+            ),
           ),
           Pinned.fromPins(
             Pin(size: 46.0, start: 37.0),

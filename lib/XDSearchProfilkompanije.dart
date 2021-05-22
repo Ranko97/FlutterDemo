@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './XDButton.dart';
+import './XDOnboarding.dart';
+import 'package:adobe_xd/page_link.dart';
 import './XDFeed_disabled.dart';
 import './XDPretraga.dart';
 import './XDProfil.dart';
@@ -39,7 +41,7 @@ class XDSearchProfilkompanije extends StatelessWidget {
                 Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: const AssetImage(''),
+                  image: const AssetImage('assets/images/profileCover.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -565,7 +567,17 @@ class XDSearchProfilkompanije extends StatelessWidget {
             Pin(size: 36.0, middle: 0.259),
             child:
                 // Adobe XD layer: 'Button' (component)
-                XDButton(),
+                PageLink(
+              links: [
+                PageLinkInfo(
+                  transition: LinkTransition.Fade,
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => XDOnboarding(),
+                ),
+              ],
+              child: XDButton(),
+            ),
           ),
           Pinned.fromPins(
             Pin(size: 64.6, middle: 0.5),

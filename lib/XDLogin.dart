@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import './XDButton.dart';
+import './XDSearch.dart';
+import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class XDLogin extends StatelessWidget {
@@ -474,7 +476,17 @@ class XDLogin extends StatelessWidget {
             Pin(size: 36.0, middle: 0.5966),
             child:
                 // Adobe XD layer: 'Button' (component)
-                XDButton(),
+                PageLink(
+              links: [
+                PageLinkInfo(
+                  transition: LinkTransition.Fade,
+                  ease: Curves.easeOut,
+                  duration: 0.3,
+                  pageBuilder: () => XDSearch(),
+                ),
+              ],
+              child: XDButton(),
+            ),
           ),
         ],
       ),
