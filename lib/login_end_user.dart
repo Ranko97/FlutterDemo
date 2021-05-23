@@ -23,16 +23,3 @@ class LoginEndUserContainer {
             : LoginEndUser.fromJson(json['loginEndUser']));
   }
 }
-
-class LoginResult {
-  List<dynamic>? errors;
-  LoginEndUserContainer? data;
-
-  LoginResult({this.data, this.errors});
-
-  factory LoginResult.fromJson(Map<String, dynamic> json) {
-    return LoginResult(
-        errors: json['errors'],
-        data: LoginEndUserContainer.fromJson(json['data']));
-  }
-}

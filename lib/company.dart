@@ -33,13 +33,3 @@ class CompaniesOuter {
     return CompaniesOuter(data: DataInner.fromJson(json['companies']));
   }
 }
-
-class DataOuter {
-  final CompaniesOuter? companies;
-
-  DataOuter({this.companies});
-
-  factory DataOuter.fromJson(Map<String, dynamic> json) {
-    return DataOuter(companies: CompaniesOuter.fromJson(json['data']));
-  }
-}

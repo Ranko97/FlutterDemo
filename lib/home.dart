@@ -1,14 +1,17 @@
-import 'dart:convert';
-
 import 'package:demo_app/company.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-final companiesUrl = "https://edomace.azurewebsites.net/graphql";
-final companiesQuery =
-    """query search(\$value: String) {\\r\\n  companies(query:\$value) {\\r\\n    data {\\r\\n      id name\\r\\n    }\\r\\n  }\\r\\n}""";
+final loginUrl = "https://edomace.azurewebsites.net/graphql";
+final companiesQuery = """query search(\$value: String) {
+        companies(query:\$value) {
+          data {
+                id name
+          }
+        }
+      }""";
 
 class HomeScreen extends StatelessWidget {
   final String authToken;
@@ -38,7 +41,24 @@ class CompaniesData extends StatefulWidget {
 
 class CompaniesList extends State<CompaniesData> {
   final String authToken;
-  CompaniesList({Key? key, this.authToken = ""});
+  late ValueNotifier<GraphQLClient> client;
+
+  CompaniesList({Key? key, this.authToken = ""}) {
+    init();
+  }
+
+  Future<void> init() async {
+    await initHiveForFlutter();
+    Map<String, String> headers = {"Authorization": authToken};
+    final HttpLink httpLink = HttpLink(loginUrl, defaultHeaders: headers);
+
+    client = ValueNotifier(
+      GraphQLClient(
+        link: httpLink,
+        cache: GraphQLCache(store: HiveStore()),
+      ),
+    );
+  }
 
   List<Company> companies = [];
   final _searchTextController = TextEditingController();
@@ -49,34 +69,28 @@ class CompaniesList extends State<CompaniesData> {
     });
   }
 
-  void getCompanies() async {
-    String text = "";
+  void getCompaniesViaGraphQL() async {
+    final QueryOptions options = QueryOptions(
+      document: gql(companiesQuery),
+      variables: <String, dynamic>{
+        'value': _searchTextController.value.text,
+      },
+    );
 
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + authToken,
-    };
+    final QueryResult result = await client.value.query(options);
 
-    var request = http.Request('POST', Uri.parse(companiesUrl));
-    request.body = '''{"query":"''' +
-        companiesQuery +
-        '''","variables":''' +
-        json.encode({"value": _searchTextController.value.text}) +
-        '''}''';
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      text = await response.stream.bytesToString();
-
-      DataOuter dataOuter = DataOuter.fromJson(json.decode(text));
-
-      // Update companies and re-render screen
-      _updateCompanies(dataOuter.companies?.data?.companies);
+    if (result.hasException) {
+      print(result.exception);
     } else {
-      print(response.reasonPhrase);
+      print("Success...");
+      Map<String, dynamic>? data = result.data;
+
+      if (data != null) {
+        CompaniesOuter companiesOuter = CompaniesOuter.fromJson(data);
+
+        // Update companies and re-render screen
+        _updateCompanies(companiesOuter.data?.companies);
+      }
     }
   }
 
@@ -130,7 +144,7 @@ class CompaniesList extends State<CompaniesData> {
                     : Colors.blue;
               }),
             ),
-            onPressed: getCompanies,
+            onPressed: getCompaniesViaGraphQL,
           ),
           getCompanyWidgets(companies),
         ],

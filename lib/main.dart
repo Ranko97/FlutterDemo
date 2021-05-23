@@ -1,31 +1,50 @@
-import 'dart:convert';
-
 import 'package:demo_app/PageContaniner.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
-import 'package:demo_app/user.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'package:http/http.dart' as http;
-
-void main() => runApp(SignUpApp());
-
+late ValueNotifier<GraphQLClient> client;
 String authToken = "";
 final loginUrl = "https://edomace.azurewebsites.net/graphql";
 final loginMutationString =
-    """mutation login(\$username: String!, \$password: String!) {\\r\\n  loginEndUser(username: \$username, password: \$password) {\\r\\n    id authToken\\r\\n  }\\r\\n}""";
+    """mutation login(\$username: String!, \$password: String!) {
+        loginEndUser(username: \$username, password: \$password) {
+              id authToken
+        }
+      }""";
+
+Future<void> main() async {
+  await init();
+  runApp(SignUpApp());
+}
+
+Future<void> init() async {
+  await initHiveForFlutter();
+
+  final HttpLink httpLink = HttpLink(loginUrl);
+
+  client = ValueNotifier(
+    GraphQLClient(
+      link: httpLink,
+      cache: GraphQLCache(store: HiveStore()),
+    ),
+  );
+}
 
 class SignUpApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/': (context) => SignUpScreen(),
-        '/home': (context) => HomeScreen(
-              authToken: authToken,
-            ),
-      },
-    );
+    return GraphQLProvider(
+        client: client,
+        child: MaterialApp(
+          routes: {
+            '/': (context) => SignUpScreen(),
+            '/home': (context) => HomeScreen(
+                  authToken: authToken,
+                ),
+          },
+        ));
   }
 }
 
@@ -54,49 +73,37 @@ class _SignUpFormState extends State<SignUpForm> {
     });
   }
 
-  Future<void> _login() async {
-    // Send login request
-    var result = "";
-    var headers = {
-      'Content-Type': 'application/json',
-    };
+  Future<void> _loginViaGraphQL() async {
+    final MutationOptions options = MutationOptions(
+      document: gql(loginMutationString),
+      variables: <String, dynamic>{
+        'username': _usernameTextController.value.text,
+        'password': _passwordTextController.value.text
+      },
+    );
 
-    var params = new User();
-    params.username = _usernameTextController.value.text;
-    params.password = _passwordTextController.value.text;
+    final QueryResult result = await client.value.mutate(options);
 
-    var request = http.Request('POST', Uri.parse(loginUrl));
-    request.body = '''{"query":"''' +
-        loginMutationString +
-        '''","variables":''' +
-        jsonEncode(params.toJson()) +
-        '''}''';
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      result = await response.stream.bytesToString();
-
-      // Check if loginEndUser is null
-      LoginResult loginResult = LoginResult.fromJson(json.decode(result));
-
-      if (loginResult.data?.loginEndUser != null) {
-        _updateErrorVisibility(false);
-        // Get user's auth token and send it with next requests
-        authToken = loginResult.data!.loginEndUser!.authToken!;
-
-        // Navigate to main page
-        Navigator.of(context).pushNamed('/home');
-      } else {
-        // Display error message
-        _updateErrorVisibility(true);
-      }
-    } else {
-      print(response.reasonPhrase);
+    if (result.hasException) {
+      print(result.exception);
       // Display error message
       _updateErrorVisibility(true);
+    } else {
+      print("Success...");
+      Map<String, dynamic>? data = result.data;
+
+      if (data != null) {
+        LoginEndUserContainer result = LoginEndUserContainer.fromJson(data);
+
+        if (result.loginEndUser != null) {
+          _updateErrorVisibility(false);
+          // Get user's auth token and send it with next requests
+          authToken = result.loginEndUser!.authToken!;
+
+          // Navigate to main page
+          Navigator.of(context).pushNamed('/home');
+        }
+      }
     }
   }
 
@@ -154,7 +161,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     : Colors.blue;
               }),
             ),
-            onPressed: _formProgress == 1 ? _login : null,
+            onPressed: _formProgress == 1 ? _loginViaGraphQL : null,
             child: Text('Sign in'),
           ),
           new Visibility(
