@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 final loginUrl = "https://edomace.azurewebsites.net/graphql";
-final companiesQuery = """query search(\$value: String) {
-        companies(query:\$value) {
+final companiesQuery =
+    """query search(\$value: String, \$take: Int, \$skip: Int) {
+        companies(query:\$value , take: \$take, skip: \$skip) {
           data {
                 id name
           }
@@ -62,6 +63,8 @@ class CompaniesList extends State<CompaniesData> {
 
   List<Company> companies = [];
   final _searchTextController = TextEditingController();
+  final _numController = TextEditingController();
+  int companiesPageOffset = 0;
 
   void _updateCompanies(List<Company>? newCompanies) {
     setState(() {
@@ -74,6 +77,8 @@ class CompaniesList extends State<CompaniesData> {
       document: gql(companiesQuery),
       variables: <String, dynamic>{
         'value': _searchTextController.value.text,
+        'take': _numController.value.text,
+        'skip': companiesPageOffset
       },
     );
 
@@ -84,10 +89,11 @@ class CompaniesList extends State<CompaniesData> {
     } else {
       print("Success...");
       Map<String, dynamic>? data = result.data;
+      companiesPageOffset += int.parse(_numController.value.text);
 
       if (data != null) {
         CompaniesOuter companiesOuter = CompaniesOuter.fromJson(data);
-
+        print(companiesOuter.data!.companies.length);
         // Update companies and re-render screen
         _updateCompanies(companiesOuter.data?.companies);
       }
@@ -120,6 +126,15 @@ class CompaniesList extends State<CompaniesData> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Text('Page length', style: Theme.of(context).textTheme.headline4),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: _numController,
+              decoration: InputDecoration(hintText: 'Length'),
+              keyboardType: TextInputType.number,
+            ),
+          ),
           Text('Search by name', style: Theme.of(context).textTheme.headline4),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -150,5 +165,13 @@ class CompaniesList extends State<CompaniesData> {
         ],
       ),
     );
+  }
+
+  bool _validateInput() {
+    if ("" == _numController.value.text ||
+        int.parse(_numController.value.text) < 1)
+      return false;
+    else
+      return true;
   }
 }

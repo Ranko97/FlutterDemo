@@ -1,6 +1,8 @@
 import 'package:demo_app/PageContaniner.dart';
+import 'package:demo_app/auth-service.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
+import 'package:demo_app/ticket-service.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -35,16 +37,14 @@ Future<void> init() async {
 class SignUpApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GraphQLProvider(
-        client: client,
-        child: MaterialApp(
-          routes: {
-            '/': (context) => SignUpScreen(),
-            '/home': (context) => HomeScreen(
-                  authToken: authToken,
-                ),
-          },
-        ));
+    return MaterialApp(
+      routes: {
+        '/': (context) => SignUpScreen(),
+        '/home': (context) => HomeScreen(
+              authToken: authToken,
+            ),
+      },
+    );
   }
 }
 
@@ -163,6 +163,33 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
             onPressed: _formProgress == 1 ? _loginViaGraphQL : null,
             child: Text('Sign in'),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.resolveWith(
+                  (Set<MaterialState> states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : Colors.white;
+              }),
+              backgroundColor: MaterialStateProperty.resolveWith(
+                  (Set<MaterialState> states) {
+                return states.contains(MaterialState.disabled)
+                    ? null
+                    : Colors.blue;
+              }),
+            ),
+            onPressed: () async {
+              await AuthService().loginWithRedirect(
+                  username: "marko@invenit.io",
+                  password: "Nemasifre123",
+                  context: context);
+
+              await TicketService()
+                  .one(id: "51ac503e-eff7-4423-0bb1-08d98fe5c6d8");
+              await TicketService().all();
+            },
+            child: Text('Sign in old'),
           ),
           new Visibility(
               visible: _errorVisible,
