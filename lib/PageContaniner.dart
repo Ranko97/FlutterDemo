@@ -9,8 +9,6 @@ import 'package:demo_app/XDNovareferenca.dart';
 import 'package:demo_app/XDNovareferenca1.dart';
 import 'package:demo_app/XDOnboarding.dart';
 import 'package:demo_app/XDOnboarding1.dart';
-import 'package:demo_app/XDPodesavanja.dart';
-import 'package:demo_app/XDProfil.dart';
 import 'package:demo_app/XDProfilDostignuca.dart';
 import 'package:demo_app/XDProfilGalerije.dart';
 import 'package:demo_app/XDProfilObjave.dart';

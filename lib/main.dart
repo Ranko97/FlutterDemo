@@ -3,6 +3,7 @@ import 'package:demo_app/auth-service.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
 import 'package:demo_app/ticket-service.dart';
+import 'package:demo_app/rive-guitarist.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -37,14 +38,19 @@ Future<void> init() async {
 class SignUpApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/': (context) => SignUpScreen(),
-        '/home': (context) => HomeScreen(
-              authToken: authToken,
-            ),
-      },
-    );
+    return GraphQLProvider(
+        client: client,
+        child: MaterialApp(
+          initialRoute: '/guitarist',
+          routes: {
+            // '/': (context) => SignUpScreen(),
+            '/home': (context) => HomeScreen(
+                  authToken: authToken,
+                ),
+            '/sampleanimation': (context) => SampleAnimation(),
+            '/guitarist': (context) => RiveGuitarist(),
+          },
+        ));
   }
 }
 
