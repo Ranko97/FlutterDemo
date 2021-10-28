@@ -1,9 +1,12 @@
 import 'package:demo_app/PageContaniner.dart';
 import 'package:demo_app/auth-service.dart';
+import 'package:demo_app/globals.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
-import 'package:demo_app/ticket-service.dart';
 import 'package:demo_app/rive-guitarist.dart';
+import 'package:demo_app/test/notifications-list.dart';
+import 'package:demo_app/test/transactions-list.dart';
+import 'package:demo_app/ticket-service.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -41,7 +44,26 @@ class SignUpApp extends StatelessWidget {
     return GraphQLProvider(
         client: client,
         child: MaterialApp(
-          initialRoute: '/guitarist',
+          initialRoute: '/',
+          home: FutureBuilder(
+            future: checkAuth(),
+            builder: (BuildContext context, AsyncSnapshot<Widget> widget) {
+              if (!widget.hasData) {
+                return Scaffold(
+                    body: Center(
+                  child: Stack(children: [
+                    Center(
+                      child: Image(
+                        image: AssetImage("assets/images/profileCover.png"),
+                        height: 64,
+                      ),
+                    ),
+                  ]),
+                ));
+              }
+              return widget.data ?? CircularProgressIndicator();
+            },
+          ),
           routes: {
             // '/': (context) => SignUpScreen(),
             '/home': (context) => HomeScreen(
@@ -49,8 +71,24 @@ class SignUpApp extends StatelessWidget {
                 ),
             '/sampleanimation': (context) => SampleAnimation(),
             '/guitarist': (context) => RiveGuitarist(),
+            NotificationsList.routeName: (context) => NotificationsList(),
+            TransactionsList.routeName: (context) => TransactionsList(),
           },
         ));
+  }
+
+  Future<Widget> checkAuth() async {
+    await Globals().reloadGraphQLClient();
+    bool loggedIn = await Globals().getUserFromStorage() != null;
+
+    // Make first request here to refresh authorization headers
+    if (loggedIn) await TicketService().one(id: "");
+
+    if (!loggedIn)
+      return SignUpScreen();
+    else {
+      return TransactionsList();
+    }
   }
 }
 
@@ -70,6 +108,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final _usernameTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   bool _errorVisible = false;
+  bool loading = false;
 
   double _formProgress = 0;
 
@@ -107,7 +146,7 @@ class _SignUpFormState extends State<SignUpForm> {
           authToken = result.loginEndUser!.authToken!;
 
           // Navigate to main page
-          Navigator.of(context).pushNamed('/home');
+          Navigator.of(context).pushNamed(NotificationsList.routeName);
         }
       }
     }
@@ -186,25 +225,35 @@ class _SignUpFormState extends State<SignUpForm> {
               }),
             ),
             onPressed: () async {
+              setState(() {
+                loading = true;
+              });
+
               await AuthService().loginWithRedirect(
-                  username: "marko@invenit.io",
-                  password: "Nemasifre123",
+                  username: _usernameTextController.text,
+                  password: _passwordTextController.text,
                   context: context);
 
-              await TicketService()
-                  .one(id: "51ac503e-eff7-4423-0bb1-08d98fe5c6d8");
-              await TicketService().all();
+              setState(() {
+                loading = false;
+              });
+
+              // await TicketService()
+              //     .one(id: "51ac503e-eff7-4423-0bb1-08d98fe5c6d8");
+              // await TicketService().all();
             },
             child: Text('Sign in old'),
           ),
           new Visibility(
-              visible: _errorVisible,
-              child: new Padding(
-                padding: const EdgeInsets.all(
-                  8.0,
-                ),
-                child: new Text('Wrong password!'),
-              ))
+            visible: _errorVisible,
+            child: new Padding(
+              padding: const EdgeInsets.all(
+                8.0,
+              ),
+              child: new Text('Wrong password!'),
+            ),
+          ),
+          if (loading) LinearProgressIndicator(),
         ],
       ),
     );

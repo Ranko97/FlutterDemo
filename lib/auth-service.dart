@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:demo_app/PageContaniner.dart';
 import 'package:demo_app/enduser-model.dart';
+import 'package:demo_app/test/transactions-list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -189,8 +190,8 @@ class AuthService {
       required BuildContext context}) async {
     if (await login(username: username, password: password)) {
       // Navigate to main page
-      // Navigator.restorablePushNamedAndRemoveUntil(
-      //     context, TabsScreen.routeName, (_) => false);
+      Navigator.restorablePushNamedAndRemoveUntil(
+          context, TransactionsList.routeName, (_) => false);
       return true;
     } else
       return false;

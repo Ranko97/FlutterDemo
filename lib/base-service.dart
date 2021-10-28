@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:demo_app/base-model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -47,17 +49,28 @@ abstract class BaseService<ShortModel extends BaseModel,
 
   Future<LongModel?> one(
       {required String id, FetchPolicy policy = FetchPolicy.cacheFirst}) async {
-    final QueryOptions options = QueryOptions(
+    final WatchQueryOptions options = WatchQueryOptions(
         document: selectOneQuery,
         variables: {_idFieldName: id},
         fetchPolicy: policy);
-    final QueryResult result = await Globals().client.value.query(options);
+    // final QueryResult result = await Globals().client.value.query(options);
 
-    if (result.hasException) {
-      print(result.exception);
+    final ObservableQuery query = Globals().client.value.watchQuery(options);
+
+    var res = query.fetchResults();
+
+    print(" --  --  --  -- - - - - - - -  - -- -- -- -- -- ");
+    print(res);
+    print(res.eagerResult.data);
+    print(res.networkResult);
+
+    var result = (await res.networkResult);
+
+    if (result?.hasException ?? true) {
+      print(result?.exception);
     } else {
       print(_nodeName.toString() + " select one success...");
-      Map<String, dynamic>? data = result.data;
+      Map<String, dynamic>? data = result?.data;
       if (data != null) {
         return makeLongFromJson(data[_nodeName]);
       }
@@ -65,35 +78,58 @@ abstract class BaseService<ShortModel extends BaseModel,
     return null;
   }
 
-  Future<List<ShortModel>?> all(
+  ObservableQuery all(
       {FetchPolicy policy = FetchPolicy.cacheFirst,
-      Map<String, dynamic> variables = const {}}) async {
-    final QueryOptions options = QueryOptions(
+      Map<String, dynamic> variables = const {}}) {
+    final WatchQueryOptions options = WatchQueryOptions(
         document: selectQuery, variables: variables, fetchPolicy: policy);
-    final QueryResult result = await Globals().client.value.query(options);
+    // final QueryResult result = await Globals().client.value.query(options);
 
-    if (result.hasException) {
-      print(result.exception);
-    } else {
-      print(_nodeNamePlural.toString() + " select all success...");
-      Map<String, dynamic>? data = result.data;
-      if (data != null) {
-        try {
-          return (data[_nodeNamePlural]['data'] as List)
-              .map((e) => makeShortFromJson(e))
-              .toList();
-        } catch (e) {
-          // maybe ['data'] wasn't needed if query wasn't using pagination
-          try {
-            return (data[_nodeNamePlural] as List)
-                .map((e) => makeShortFromJson(e))
-                .toList();
-          } catch (e) {
-            return null;
-          }
-        }
-      }
-    }
-    return null;
+    final ObservableQuery query = Globals().client.value.watchQuery(options);
+    // TODO: What about .latestResult?
+
+    // query.latestResult;
+
+    // query.stream.listen((event) {
+    //   print("kk kk k k");
+    //   print(event);
+    //   print("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
+    //   print(event.data);
+    // });
+
+    // var res = query.fetchResults();
+
+    // print(" --  --  --  -- - - - - - - -  - -- -- -- -- -- ");
+    // print(res);
+    // print(res.eagerResult.data);
+    // print(res.networkResult);
+
+    return query;
+
+    // var result = (res.);
+
+    // if (result == null) {
+    //   print(result?.exception);
+    // } else {
+    //   print(_nodeNamePlural.toString() + " select all success...");
+    //   Map<String, dynamic>? data = result.data;
+    //   if (data != null) {
+    //     try {
+    //       return (data[_nodeNamePlural]['data'] as List)
+    //           .map((e) => makeShortFromJson(e))
+    //           .toList();
+    //     } catch (e) {
+    //       // maybe ['data'] wasn't needed if query wasn't using pagination
+    //       try {
+    //         return (data[_nodeNamePlural] as List)
+    //             .map((e) => makeShortFromJson(e))
+    //             .toList();
+    //       } catch (e) {
+    //         return null;
+    //       }
+    //     }
+    //   }
+    // }
+    // return null;
   }
 }
