@@ -4,6 +4,7 @@ import 'package:demo_app/globals.dart';
 import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
 import 'package:demo_app/rive-guitarist.dart';
+import 'package:demo_app/tabs.dart';
 import 'package:demo_app/test/notifications-list.dart';
 import 'package:demo_app/test/transactions-list.dart';
 import 'package:demo_app/ticket-service.dart';
@@ -73,6 +74,7 @@ class SignUpApp extends StatelessWidget {
             '/guitarist': (context) => RiveGuitarist(),
             NotificationsList.routeName: (context) => NotificationsList(),
             TransactionsList.routeName: (context) => TransactionsList(),
+            TabsScreen.routeName: (context) => TabsScreen(),
           },
         ));
   }
@@ -87,7 +89,7 @@ class SignUpApp extends StatelessWidget {
     if (!loggedIn)
       return SignUpScreen();
     else {
-      return TransactionsList();
+      return TabsScreen();
     }
   }
 }
