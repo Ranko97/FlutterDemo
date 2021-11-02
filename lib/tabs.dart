@@ -1,3 +1,5 @@
+import 'package:demo_app/tabs/profile/profile-screen.dart';
+import 'package:demo_app/tabs/settings/settings-screen.dart';
 import 'package:demo_app/test/transactions-list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -26,13 +28,9 @@ class _TabsScreenState extends State<TabsScreen> {
       'Index 1: Business',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Settings',
-      style: optionStyle,
+    ProfileScreen(),
+    SettingsScreen(
+      id: "0",
     ),
   ];
 
@@ -76,8 +74,8 @@ class _TabsScreenState extends State<TabsScreen> {
             backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.person),
+            label: 'Profile',
             backgroundColor: Colors.purple,
           ),
           BottomNavigationBarItem(

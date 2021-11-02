@@ -5,6 +5,10 @@ import 'package:demo_app/home.dart';
 import 'package:demo_app/login_end_user.dart';
 import 'package:demo_app/rive-guitarist.dart';
 import 'package:demo_app/tabs.dart';
+import 'package:demo_app/tabs/profile/profile-nested-screen.dart';
+import 'package:demo_app/tabs/profile/profile-screen.dart';
+import 'package:demo_app/tabs/settings/settings-nested-screen.dart';
+import 'package:demo_app/tabs/settings/settings-screen.dart';
 import 'package:demo_app/test/notifications-list.dart';
 import 'package:demo_app/test/transactions-list.dart';
 import 'package:demo_app/ticket-service.dart';
@@ -75,6 +79,11 @@ class SignUpApp extends StatelessWidget {
             NotificationsList.routeName: (context) => NotificationsList(),
             TransactionsList.routeName: (context) => TransactionsList(),
             TabsScreen.routeName: (context) => TabsScreen(),
+            // ProfileNestedScreen.routeName: (context) =>
+            //     ProfileNestedScreen(id: "from main"),
+            // SettingsNestedScreen.routeName: (context) =>
+            //     SettingsNestedScreen(id: "settings from main"),
+            // SettingsScreen.routeName: (context) => SettingsScreen(id: id)
           },
         ));
   }

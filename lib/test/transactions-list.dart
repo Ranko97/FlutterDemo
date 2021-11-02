@@ -96,34 +96,76 @@ class _TransactionsListState extends State<TransactionsList>
           Expanded(
             child: StreamBuilder(
                 stream: transactionsStream,
-                initialData: [],
+                // initialData: [],
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
+                  // if (!snapshot.hasData) {
+                  //   return Center(child: CircularProgressIndicator());
+                  // }
+
+                  print("connection state");
+                  print(snapshot.connectionState);
+
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      // return Center(child: CircularProgressIndicator());
+                      return Container();
+
+                    case ConnectionState.none:
+                      return Center(
+                        child: Text("none "),
+                      );
+
+                    case ConnectionState.done:
+                      return Center(
+                        child: Text("DONE"),
+                      );
+
+                    case ConnectionState.active:
+                      return Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: ListView(
+                            children: ((snapshot.data as QueryResult)
+                                            .data?['transactions']['data']
+                                        as List<dynamic>?)
+                                    ?.map((e) => TransactionsListItem(
+                                        transaction:
+                                            TransactionModel.fromJson(e)))
+                                    .toList() ??
+                                [Container()],
+                          ),
+                        ),
+                      );
                   }
 
-                  // if (snapshot.connectionState == ConnectionState.done) {
-                  return Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: ListView(
-                        children: ((snapshot.data as QueryResult)
-                                        .data?['transactions']['data']
-                                    as List<dynamic>?)
-                                ?.map((e) => TransactionsListItem(
-                                    transaction: TransactionModel.fromJson(e)))
-                                .toList() ??
-                            [Container()],
-                      ),
-                    ),
-                  );
+                  // if (snapshot.connectionState == ConnectionState.active) {
+                  //   print("data");
+                  //   print(snapshot.data);
+                  //   return Center(
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.all(Radius.circular(10)),
+                  //       ),
+                  //       child: ListView(
+                  //         children: ((snapshot.data as QueryResult)
+                  //                         .data?['transactions']['data']
+                  //                     as List<dynamic>?)
+                  //                 ?.map((e) => TransactionsListItem(
+                  //                     transaction:
+                  //                         TransactionModel.fromJson(e)))
+                  //                 .toList() ??
+                  //             [Container()],
+                  //       ),
+                  //     ),
+                  //   );
+                  // } else
+                  //   return Container();
                 }),
           ),
         Center(
           child: ElevatedButton(
-              key: PageStorageKey(skip),
               onPressed: () {
                 skip++;
                 fetchMore();
